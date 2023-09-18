@@ -7,13 +7,18 @@ class TicketScrape:
         self.browser = browser
 
     def scrape_ticket(self):
-        try:
-            property = self.browser.return_element_html(
-                By.XPATH,
-                "//tr/td[@class='text-xs-right' and contains(text(), 'Property')]/following-sibling::td[@class='text-xs-left']/strong/a",
-            )
-        except NoSuchElementException:
-            property = None
+        title = self.browser.return_element_html(
+            By.XPATH,
+            '//*[contains(@class, "pull-left") and contains(@class, "text-xs-left") and contains(@class, "blue--text")]',
+        )
+        description = self.browser.return_element_html(
+            By.XPATH,
+            "//tr/td[@class='text-xs-right' and contains(text(), 'Description')]/following-sibling::td[@class='text-xs-left']",
+        )
+        property = self.browser.return_element_html(
+            By.XPATH,
+            "//tr/td[@class='text-xs-right' and contains(text(), 'Property')]/following-sibling::td[@class='text-xs-left']/strong/a",
+        )
 
         try:
             unit = self.browser.return_element_html(
@@ -31,23 +36,7 @@ class TicketScrape:
         except NoSuchElementException:
             resident = None
 
-        try:
-            title = self.browser.return_element_html(
-                By.XPATH,
-                '//*[contains(@class, "pull-left") and contains(@class, "text-xs-left") and contains(@class, "blue--text")]',
-            )
-        except:
-            title = None
-
-        try:
-            description = self.browser.return_element_html(
-                By.XPATH,
-                "//tr/td[@class='text-xs-right' and contains(text(), 'Description')]/following-sibling::td[@class='text-xs-left']",
-            )
-        except NoSuchElementException:
-            description = None
-
-        return property, unit, resident, title, description
+        return [title, description, property, unit, resident]
 
 
 class TicketOperations(TicketScrape):
